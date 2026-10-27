@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import YAML from 'yaml';
 
 const ROOT = process.cwd();
@@ -370,6 +371,31 @@ async function handleApi(req, res) {
   throw new HttpError(405, '不支持的请求方式');
 }
 
+let contentSyncQueue = Promise.resolve();
+
+async function syncAstroContent() {
+  const instanceUrl = pathToFileURL(
+    path.join(ROOT, 'node_modules/astro/dist/content/instance.js'),
+  ).href;
+  const { globalContentLayer } = await import(instanceUrl);
+  const contentLayer = await globalContentLayer.get();
+  if (!contentLayer?.sync) {
+    throw new Error('Astro content layer is not available');
+  }
+  await contentLayer.sync();
+}
+
+function scheduleContentSync(server) {
+  contentSyncQueue = contentSyncQueue
+    .catch(() => {})
+    .then(() => syncAstroContent())
+    .catch(async (error) => {
+      console.error('[local-admin] Content sync failed, restarting dev server:', error);
+      await server.restart();
+    });
+  return contentSyncQueue;
+}
+
 export function localAdminPlugin() {
   return {
     name: 'local-markdown-admin',
@@ -384,8 +410,12 @@ export function localAdminPlugin() {
           return sendJson(res, 403, { error: '本地管理接口只允许通过 127.0.0.1 访问' });
         }
 
+        const shouldSync = ['POST', 'PUT', 'DELETE'].includes(req.method ?? '');
         try {
           await handleApi(req, res);
+          if (shouldSync && res.statusCode >= 200 && res.statusCode < 300) {
+            await scheduleContentSync(server);
+          }
         } catch (error) {
           const statusCode = error instanceof HttpError ? error.statusCode : 500;
           if (statusCode >= 500) {
