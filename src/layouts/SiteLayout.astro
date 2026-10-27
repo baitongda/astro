@@ -1,0 +1,27 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const home = await getEntry('home', 'landing');
+if (!home) {
+  throw new Error('Missing src/content/home/landing.md');
+}
+
+const pageTitle = Astro.props.title ?? home.data.seo.title;
+const pageDescription = Astro.props.description ?? home.data.seo.description;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <Header data={home.data} />
+  <main id="main-content">
+    <slot />
+  </main>
+  <Footer data={home.data} />
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#1769ff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/admin/admin.css" />
+    <title>内容管理后台</title>
+  </head>
+  <body>
+    <header class="admin-topbar">
+      <a class="admin-brand" href="/" target="_blank" rel="noreferrer" aria-label="打开网站首页">
+        <span class="brand-mark" aria-hidden="true">内</span>
+        <span class="brand-copy">
+          <strong>内容管理</strong>
+          <small>Astro Markdown 本地后台</small>
+        </span>
+      </a>
+      <div class="topbar-actions">
+        <span class="local-badge">仅本机可写</span>
+        <a class="button button--secondary" href="/" target="_blank" rel="noreferrer">查看网站 ↗</a>
+      </div>
+    </header>
+
+    <div class="admin-layout">
+      <aside class="admin-sidebar" aria-label="内容导航">
+        <div class="sidebar-head">
+          <a class="button button--secondary" href="/" target="_blank" rel="noreferrer">打开网站预览</a>
+        </div>
+        <nav class="content-nav" id="content-nav" aria-label="内容列表"></nav>
+        <div class="sidebar-footer">
+          内容会保存到 <code>src/content</code>。每次覆盖或删除前会自动备份到 <code>.admin-backups</code>。
+        </div>
+      </aside>
+
+      <main class="admin-main" id="admin-main">
+        <div class="admin-main__inner">
+          <div class="loading">正在加载内容管理后台…</div>
+        </div>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script is:inline src="/admin/admin.js"></script>
+  </body>
+</html>

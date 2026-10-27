@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ChevronDown, MessageCircleQuestionMark } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+---
+
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><MessageCircleQuestionMark size={15} stroke-width={2.2} />{data.faqs.eyebrow}</div>
+      <h2 class="section-title">{data.faqs.title}</h2>
+      <p class="section-description">{data.faqs.description}</p>
+    </div>
+
+    <div class="faq-list">
+      {data.faqs.items.map((item, index) => (
+        <details class="faq-item" open={index === 0}>
+          <summary>
+            {item.question}
+            <ChevronDown size={18} stroke-width={2.2} />
+          </summary>
+          <div class="faq-item__answer"><p>{item.answer}</p></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Route } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+---
+
+<section class="section section--soft">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><Route size={15} stroke-width={2.2} />{data.phases.eyebrow}</div>
+      <h2 class="section-title">{data.phases.title}</h2>
+      <p class="section-description">{data.phases.description}</p>
+    </div>
+
+    <div class="timeline">
+      {data.phases.items.map((item) => (
+        <article class="phase-card">
+          <span class="phase-card__index">{item.index}</span>
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+          <div class="tag-row">
+            {item.tags.map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

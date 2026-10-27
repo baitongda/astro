@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ArrowUpRight, Mail } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+const year = new Date().getFullYear();
+const copyright = data.footer.copyright.replace(/\d{4}/, String(year));
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand footer-brand" href="/">
+          <span class="brand__mark" aria-hidden="true">{data.brand.shortName.slice(0, 1)}</span>
+          <span class="brand__text">
+            <span class="brand__name">{data.brand.name}</span>
+            <span class="brand__slogan">{data.brand.slogan}</span>
+          </span>
+        </a>
+        <p class="footer-description">{data.footer.description}</p>
+      </div>
+
+      <div>
+        <h2 class="footer-heading">社交平台</h2>
+        <div class="footer-links">
+          {data.footer.socials.map((social) => (
+            <a class="footer-link" href={social.href} target="_blank" rel="noreferrer">
+              {social.label}
+              <span>{social.value} <ArrowUpRight size={12} stroke-width={2.3} /></span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 class="footer-heading">语言</h2>
+        <div class="footer-languages">
+          {data.footer.languages.map((language) => (
+            <a
+              class="language-link"
+              href={language.href}
+              aria-current={language.active ? 'page' : undefined}
+            >{language.label}</a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>{copyright}</span>
+      <div class="footer-legal">
+        {data.footer.legal.map((item) => <a href={item.href}>{item.label}</a>)}
+        <a href={`mailto:${data.about.contacts[0]?.value ?? 'hello@example.com'}`}><Mail size={13} stroke-width={2.2} /> 邮件</a>
+      </div>
+    </div>
+  </div>
+</footer>

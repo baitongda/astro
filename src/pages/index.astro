@@ -1,0 +1,28 @@
+---
+import { getEntry } from 'astro:content';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Hero from '../components/Hero.astro';
+import PainPoints from '../components/PainPoints.astro';
+import Phases from '../components/Phases.astro';
+import Benefits from '../components/Benefits.astro';
+import Pricing from '../components/Pricing.astro';
+import Faq from '../components/Faq.astro';
+import About from '../components/About.astro';
+
+const home = await getEntry('home', 'landing');
+if (!home) {
+  throw new Error('Missing src/content/home/landing.md');
+}
+
+const data = home.data;
+---
+
+<SiteLayout>
+  <Hero data={data} />
+  <PainPoints data={data} />
+  <Phases data={data} />
+  <Benefits data={data} />
+  <Pricing data={data} />
+  <Faq data={data} />
+  <About data={data} />
+</SiteLayout>

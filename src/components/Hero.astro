@@ -1,0 +1,99 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ArrowRight, BookOpen, CircleCheckBig, Sparkles } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+---
+
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="eyebrow hero__eyebrow">
+      <Sparkles size={15} stroke-width={2.2} />
+      {data.hero.eyebrow}
+    </div>
+
+    <h1 class="hero__title">{data.hero.title}</h1>
+    <p class="hero__subtitle">{data.hero.subtitle}</p>
+    <p class="hero__description">{data.hero.description}</p>
+
+    <div class="hero__actions">
+      <a class="button button--primary" href={data.hero.primaryCta.href}>
+        {data.hero.primaryCta.label}
+        <ArrowRight size={17} stroke-width={2.3} />
+      </a>
+      <a class="button button--secondary" href={data.hero.secondaryCta.href}>
+        <BookOpen size={17} stroke-width={2.2} />
+        {data.hero.secondaryCta.label}
+      </a>
+    </div>
+
+    <div class="hero__stats" aria-label="课程数据概览">
+      {data.hero.stats.map((stat) => (
+        <div class="hero-stat">
+          <strong>{stat.value}</strong>
+          <span>{stat.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="workbench" aria-label="课程工作台预览">
+      <div class="workbench__topbar">
+        <div class="workbench__dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        <span class="workbench__title">{data.hero.preview.title}</span>
+        <span class="workbench__live">运行中</span>
+      </div>
+
+      <div class="workbench__body">
+        <div class="workbench__main">
+          <p class="workbench__caption">{data.hero.preview.caption}</p>
+
+          <div class="workbench__metrics">
+            {data.hero.preview.metrics.map((metric) => (
+              <div class="workbench__metric">
+                <span>{metric.label}</span>
+                <strong>{metric.value}</strong>
+                <small>{metric.trend}</small>
+              </div>
+            ))}
+          </div>
+
+          <div class="workbench__tasks">
+            {data.hero.preview.tasks.map((task) => (
+              <div class="workbench-task">
+                <div>
+                  <strong>{task.title}</strong>
+                  <span>{task.meta}</span>
+                </div>
+                <span class="status">{task.status}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <aside class="workbench__aside">
+          <div class="workbench__progress">
+            <div class="workbench__progress-head">
+              <span>{data.hero.preview.progressLabel}</span>
+              <strong>{data.hero.preview.progressValue}</strong>
+            </div>
+            <div class="progress-track"><span></span></div>
+          </div>
+
+          <div class="workbench__note">
+            <strong>学习重点</strong>
+            <p>从真实文件出发，保留检查步骤，把一次成功操作整理成可以继续使用的流程。</p>
+          </div>
+
+          <div class="workbench__note" style="margin-top: 10px;">
+            <strong>交付标准</strong>
+            <p><CircleCheckBig size={14} stroke-width={2.2} style="display:inline; vertical-align:-2px; margin-right:4px;" />内容可用、格式可用、来源可查。</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>

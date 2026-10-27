@@ -1,0 +1,30 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { BadgeCheck } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+---
+
+<section class="section" id="benefits">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><BadgeCheck size={15} stroke-width={2.2} />{data.benefits.eyebrow}</div>
+      <h2 class="section-title">{data.benefits.title}</h2>
+      <p class="section-description">{data.benefits.description}</p>
+    </div>
+
+    <div class="benefit-grid">
+      {data.benefits.items.map((item) => (
+        <article class="benefit-card">
+          <span class="benefit-card__tag">{item.tag}</span>
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

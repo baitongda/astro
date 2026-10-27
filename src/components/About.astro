@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ArrowUpRight, CircleUserRound, Mail } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+---
+
+<section class="section section--soft" id="about">
+  <div class="container about-layout">
+    <div class="about-copy">
+      <div class="eyebrow"><CircleUserRound size={15} stroke-width={2.2} />{data.about.eyebrow}</div>
+      <h2 class="section-title">{data.about.title}</h2>
+      <p class="section-description">{data.about.description}</p>
+      {data.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+
+    <aside class="about-panel">
+      <div class="about-stats">
+        {data.about.stats.map((stat) => (
+          <div class="about-stat">
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="contact-list">
+        {data.about.contacts.map((contact) => (
+          <a class="contact-link" href={contact.href}>
+            <span>{contact.label}</span>
+            <strong>{contact.value} <ArrowUpRight size={13} stroke-width={2.3} /></strong>
+          </a>
+        ))}
+      </div>
+
+      <a class="button button--secondary button--block" href={data.about.contacts[0]?.href ?? 'mailto:hello@example.com'} style="margin-top: 12px;">
+        <Mail size={17} stroke-width={2.2} />
+        联系我
+      </a>
+    </aside>
+  </div>
+</section>

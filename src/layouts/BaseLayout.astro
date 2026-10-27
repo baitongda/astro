@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+---
+
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#1769ff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem('site-theme');
+          const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          document.documentElement.dataset.theme = saved || preferred;
+        } catch {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <slot />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+
+        document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+          button.addEventListener('click', () => {
+            const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            root.dataset.theme = nextTheme;
+            localStorage.setItem('site-theme', nextTheme);
+          });
+        });
+
+        document.querySelectorAll('[data-mobile-link]').forEach((link) => {
+          link.addEventListener('click', () => link.closest('details')?.removeAttribute('open'));
+        });
+      })();
+    </script>
+  </body>
+</html>

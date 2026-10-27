@@ -1,0 +1,250 @@
+site_url: http://localhost:4321
+display_url: http://localhost:4321
+
+backend:
+  name: github
+  repo: baitongda/astro
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+publish_mode: editorial_workflow
+
+collections:
+  - name: site
+    label: 网站内容
+    files:
+      - name: home
+        label: 首页
+        file: src/content/home/landing.md
+        fields:
+          - label: SEO
+            name: seo
+            widget: object
+            fields:
+              - { label: 标题, name: title, widget: string }
+              - { label: 描述, name: description, widget: text }
+          - label: 顶部公告
+            name: announcement
+            widget: object
+            fields:
+              - { label: 公告文字, name: text, widget: string }
+              - { label: 按钮文字, name: label, widget: string }
+              - { label: 按钮链接, name: href, widget: string }
+          - label: 品牌
+            name: brand
+            widget: object
+            fields:
+              - { label: 完整名称, name: name, widget: string }
+              - { label: 短名称, name: shortName, widget: string }
+              - { label: 品牌口号, name: slogan, widget: string }
+          - label: 主导航
+            name: navigation
+            widget: list
+            fields:
+              - { label: 名称, name: label, widget: string }
+              - { label: 链接, name: href, widget: string }
+          - label: 主视觉
+            name: hero
+            widget: object
+            fields:
+              - { label: 眉题, name: eyebrow, widget: string }
+              - { label: 主标题, name: title, widget: string }
+              - { label: 副标题, name: subtitle, widget: string }
+              - { label: 说明, name: description, widget: text }
+              - label: 主按钮
+                name: primaryCta
+                widget: object
+                fields:
+                  - { label: 文字, name: label, widget: string }
+                  - { label: 链接, name: href, widget: string }
+              - label: 次按钮
+                name: secondaryCta
+                widget: object
+                fields:
+                  - { label: 文字, name: label, widget: string }
+                  - { label: 链接, name: href, widget: string }
+              - label: 数据
+                name: stats
+                widget: list
+                fields:
+                  - { label: 数值, name: value, widget: string }
+                  - { label: 说明, name: label, widget: string }
+              - label: 工作台预览
+                name: preview
+                widget: object
+                fields:
+                  - { label: 标题, name: title, widget: string }
+                  - { label: 说明, name: caption, widget: text }
+                  - { label: 进度名称, name: progressLabel, widget: string }
+                  - { label: 进度数值, name: progressValue, widget: string }
+                  - label: 指标
+                    name: metrics
+                    widget: list
+                    fields:
+                      - { label: 名称, name: label, widget: string }
+                      - { label: 数值, name: value, widget: string }
+                      - { label: 备注, name: trend, widget: string }
+                  - label: 任务
+                    name: tasks
+                    widget: list
+                    fields:
+                      - { label: 标题, name: title, widget: string }
+                      - { label: 类型, name: meta, widget: string }
+                      - { label: 状态, name: status, widget: string }
+          - label: 真实场景
+            name: painPoints
+            widget: object
+            fields:
+              - { label: 眉题, name: eyebrow, widget: string }
+              - { label: 标题, name: title, widget: string }
+              - { label: 说明, name: description, widget: text }
+              - label: 场景卡片
+                name: items
+                widget: list
+                fields:
+                  - { label: 分类, name: category, widget: string }
+                  - { label: 课次, name: lesson, widget: string }
+                  - { label: 标题, name: title, widget: string }
+                  - { label: 要点, name: bullets, widget: list, field: { label: 内容, name: item, widget: string } }
+          - label: 学习路径
+            name: phases
+            widget: object
+            fields:
+              - { label: 眉题, name: eyebrow, widget: string }
+              - { label: 标题, name: title, widget: string }
+              - { label: 说明, name: description, widget: text }
+              - label: 阶段
+                name: items
+                widget: list
+                fields:
+                  - { label: 序号, name: index, widget: string }
+                  - { label: 标题, name: title, widget: string }
+                  - { label: 说明, name: description, widget: text }
+                  - { label: 标签, name: tags, widget: list, field: { label: 标签, name: item, widget: string } }
+          - label: 核心优势
+            name: benefits
+            widget: object
+            fields:
+              - { label: 眉题, name: eyebrow, widget: string }
+              - { label: 标题, name: title, widget: string }
+              - { label: 说明, name: description, widget: text }
+              - label: 优势
+                name: items
+                widget: list
+                fields:
+                  - { label: 标签, name: tag, widget: string }
+                  - { label: 标题, name: title, widget: string }
+                  - { label: 说明, name: description, widget: text }
+          - label: 课程价格
+            name: pricing
+            widget: object
+            fields:
+              - { label: 眉题, name: eyebrow, widget: string }
+              - { label: 标题, name: title, widget: string }
+              - { label: 说明, name: description, widget: text }
+              - { label: 徽标, name: badge, widget: string }
+              - { label: 课程名称, name: name, widget: string }
+              - { label: 原价, name: oldPrice, widget: string }
+              - { label: 现价, name: price, widget: string }
+              - { label: 价格说明, name: unit, widget: string }
+              - { label: 摘要, name: summary, widget: text }
+              - { label: 包含内容, name: features, widget: list, field: { label: 内容, name: item, widget: string } }
+              - label: 购买按钮
+                name: cta
+                widget: object
+                fields:
+                  - { label: 文字, name: label, widget: string }
+                  - { label: 链接, name: href, widget: string }
+              - { label: 价格备注, name: note, widget: string }
+          - label: 常见问题
+            name: faqs
+            widget: object
+            fields:
+              - { label: 眉题, name: eyebrow, widget: string }
+              - { label: 标题, name: title, widget: string }
+              - { label: 说明, name: description, widget: text }
+              - label: 问答
+                name: items
+                widget: list
+                fields:
+                  - { label: 问题, name: question, widget: string }
+                  - { label: 回答, name: answer, widget: text }
+          - label: 关于作者
+            name: about
+            widget: object
+            fields:
+              - { label: 眉题, name: eyebrow, widget: string }
+              - { label: 标题, name: title, widget: string }
+              - { label: 说明, name: description, widget: text }
+              - { label: 正文段落, name: paragraphs, widget: list, field: { label: 段落, name: item, widget: text } }
+              - label: 数据
+                name: stats
+                widget: list
+                fields:
+                  - { label: 数值, name: value, widget: string }
+                  - { label: 说明, name: label, widget: string }
+              - label: 联系方式
+                name: contacts
+                widget: list
+                fields:
+                  - { label: 名称, name: label, widget: string }
+                  - { label: 显示内容, name: value, widget: string }
+                  - { label: 链接, name: href, widget: string }
+          - label: 页脚
+            name: footer
+            widget: object
+            fields:
+              - { label: 说明, name: description, widget: text }
+              - label: 社交账号
+                name: socials
+                widget: list
+                fields:
+                  - { label: 平台, name: label, widget: string }
+                  - { label: 账号, name: value, widget: string }
+                  - { label: 链接, name: href, widget: string }
+              - label: 法律链接
+                name: legal
+                widget: list
+                fields:
+                  - { label: 名称, name: label, widget: string }
+                  - { label: 链接, name: href, widget: string }
+              - label: 语言
+                name: languages
+                widget: list
+                fields:
+                  - { label: 名称, name: label, widget: string }
+                  - { label: 链接, name: href, widget: string }
+                  - { label: 当前语言, name: active, widget: boolean, default: false }
+              - { label: 版权, name: copyright, widget: string }
+
+  - name: notes
+    label: 学习笔记
+    folder: src/content/notes
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 摘要, name: description, widget: text }
+      - { label: 发布日期, name: publishDate, widget: date, format: YYYY-MM-DD }
+      - { label: 标签, name: tags, widget: list, required: false, field: { label: 标签, name: item, widget: string } }
+      - { label: 精选, name: featured, widget: boolean, default: false }
+      - { label: 正文, name: body, widget: markdown }
+
+  - name: products
+    label: 产品
+    folder: src/content/products
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: 名称, name: title, widget: string }
+      - { label: 摘要, name: description, widget: text }
+      - { label: 状态, name: status, widget: string, default: 进行中 }
+      - { label: 分类, name: category, widget: string }
+      - { label: 排序, name: order, widget: number, default: 0, value_type: int }
+      - { label: 外部链接, name: url, widget: string, required: false }
+      - { label: 详情, name: body, widget: markdown }

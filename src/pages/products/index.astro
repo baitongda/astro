@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { ArrowUpRight, Boxes } from '@lucide/astro';
+
+const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<SiteLayout title="产品｜你的 AI 办公工作室" description="记录正在开发、已经上线和计划中的产品。">
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="eyebrow"><Boxes size={15} stroke-width={2.2} />产品</div>
+      <h1>持续做小产品，也持续把过程公开</h1>
+      <p>产品条目独立维护，支持状态、分类、排序和外部链接，新增项目不需要修改页面代码。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="card-grid">
+        {products.map((entry) => (
+          <article class="content-card">
+            <div class="content-card__meta">
+              <span>{entry.data.category}</span>
+              <span>{entry.data.status}</span>
+            </div>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.description}</p>
+            <div class="content-card__footer">
+              <a href={`/products/${entry.id}`}>查看详情</a>
+              {entry.data.url && <a href={entry.data.url} aria-label={`打开 ${entry.data.title}`}><ArrowUpRight size={18} stroke-width={2.3} /></a>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</SiteLayout>

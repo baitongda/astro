@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ArrowUpRight, Menu, Moon, Sun } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+---
+
+<div class="announcement">
+  <div class="container announcement__inner">
+    <span class="announcement__text">{data.announcement.text}</span>
+    <a class="announcement__link" href={data.announcement.href}>
+      {data.announcement.label}
+      <ArrowUpRight size={13} stroke-width={2.4} />
+    </a>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container header__inner">
+    <a class="brand" href="/" aria-label={`${data.brand.name} 首页`}>
+      <span class="brand__mark" aria-hidden="true">{data.brand.shortName.slice(0, 1)}</span>
+      <span class="brand__text">
+        <span class="brand__name">{data.brand.name}</span>
+        <span class="brand__slogan">{data.brand.slogan}</span>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="主导航">
+      {data.navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <div class="header__actions">
+      <button class="icon-button" type="button" data-theme-toggle aria-label="切换黑白主题">
+        <Sun class="theme-icon theme-icon--light" size={18} stroke-width={2} />
+        <Moon class="theme-icon theme-icon--dark" size={18} stroke-width={2} />
+      </button>
+
+      <details class="mobile-menu">
+        <summary class="icon-button" aria-label="打开导航菜单">
+          <Menu size={19} stroke-width={2.2} />
+        </summary>
+        <nav class="mobile-menu__panel" aria-label="移动端导航">
+          {data.navigation.map((item) => (
+            <a href={item.href} data-mobile-link>{item.label}</a>
+          ))}
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>

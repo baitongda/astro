@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const formatDate = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<SiteLayout title={`${entry.data.title}｜学习笔记`} description={entry.data.description}>
+  <article class="section">
+    <div class="container article-shell">
+      <div>
+        <div class="eyebrow">学习笔记</div>
+        <h1 class="section-title">{entry.data.title}</h1>
+        <div class="article-meta">
+          <span>{formatDate.format(entry.data.publishDate)}</span>
+          <span>{entry.data.tags.join(' · ')}</span>
+        </div>
+        <div class="prose"><Content /></div>
+      </div>
+
+      <aside class="article-aside">
+        <h2>内容说明</h2>
+        <p>文章和课程、产品使用同一套内容系统，可以在后台直接新增、修改或隐藏。</p>
+        <a class="button button--secondary button--block" href="/notes">返回全部笔记</a>
+      </aside>
+    </div>
+  </article>
+</SiteLayout>

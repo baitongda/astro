@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { ArrowUpRight } from '@lucide/astro';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<SiteLayout title={`${entry.data.title}｜产品`} description={entry.data.description}>
+  <article class="section">
+    <div class="container article-shell">
+      <div>
+        <div class="eyebrow">{entry.data.category} · {entry.data.status}</div>
+        <h1 class="section-title">{entry.data.title}</h1>
+        <p class="section-description">{entry.data.description}</p>
+        <div class="prose" style="margin-top: 28px;"><Content /></div>
+      </div>
+
+      <aside class="article-aside">
+        <h2>继续了解</h2>
+        <p>你可以在后台修改产品状态、分类、排序，以及按钮要打开的链接。</p>
+        {entry.data.url && (
+          <a class="button button--primary button--block" href={entry.data.url}>
+            打开相关页面
+            <ArrowUpRight size={16} stroke-width={2.3} />
+          </a>
+        )}
+        <a class="button button--secondary button--block" href="/products" style="margin-top: 10px;">返回全部产品</a>
+      </aside>
+    </div>
+  </article>
+</SiteLayout>

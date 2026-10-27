@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ArrowRight, BriefcaseBusiness } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+---
+
+<section class="section" id="course">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow"><BriefcaseBusiness size={15} stroke-width={2.2} />{data.painPoints.eyebrow}</div>
+      <h2 class="section-title">{data.painPoints.title}</h2>
+      <p class="section-description">{data.painPoints.description}</p>
+    </div>
+
+    <div class="cards-grid">
+      {data.painPoints.items.map((item) => (
+        <article class="problem-card">
+          <div class="problem-card__meta">
+            <span class="problem-card__category">{item.category}</span>
+            <span class="problem-card__lesson">{item.lesson}</span>
+          </div>
+          <h3>{item.title}</h3>
+          <ul class="problem-list">
+            {item.bullets.map((bullet) => <li>{bullet}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+
+    <div class="section-cta">
+      <a class="button button--secondary" href="/notes">
+        查看完整学习笔记
+        <ArrowRight size={17} stroke-width={2.3} />
+      </a>
+    </div>
+  </div>
+</section>

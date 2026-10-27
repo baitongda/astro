@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ArrowUpRight, Check, CircleDollarSign } from '@lucide/astro';
+
+interface Props {
+  data: CollectionEntry<'home'>['data'];
+}
+
+const { data } = Astro.props;
+---
+
+<section class="section section--soft" id="pricing">
+  <div class="container pricing-layout">
+    <div class="pricing-copy section-head section-head--left">
+      <div class="eyebrow"><CircleDollarSign size={15} stroke-width={2.2} />{data.pricing.eyebrow}</div>
+      <h2 class="section-title">{data.pricing.title}</h2>
+      <p class="section-description">{data.pricing.description}</p>
+    </div>
+
+    <article class="price-card">
+      <div class="price-card__head">
+        <div>
+          <h3>{data.pricing.name}</h3>
+          <p class="price-card__summary">{data.pricing.summary}</p>
+        </div>
+        <span class="price-card__badge">{data.pricing.badge}</span>
+      </div>
+
+      <div class="price-card__price">
+        <span class="price-card__old">{data.pricing.oldPrice}</span>
+        <strong>{data.pricing.price}</strong>
+        <span class="price-card__unit">{data.pricing.unit}</span>
+      </div>
+
+      <ul class="feature-list">
+        {data.pricing.features.map((feature) => (
+          <li><Check size={16} stroke-width={2.5} />{feature}</li>
+        ))}
+      </ul>
+
+      <a class="button button--primary button--block" href={data.pricing.cta.href}>
+        {data.pricing.cta.label}
+        <ArrowUpRight size={17} stroke-width={2.3} />
+      </a>
+      <p class="price-card__note">{data.pricing.note}</p>
+    </article>
+  </div>
+</section>
