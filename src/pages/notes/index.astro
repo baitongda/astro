@@ -1,12 +1,16 @@
 ---
 import { getCollection } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import { ArrowRight, CalendarDays } from '@lucide/astro';
+import { ArrowUpRight } from '@lucide/astro';
 
 const notes = (await getCollection('notes')).sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
 );
-const formatDate = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+const formatDate = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
 ---
 
 <SiteLayout title="学习笔记｜你的 AI 办公工作室" description="记录 AI 办公、自动化流程和独立产品开发中的真实方法。">
@@ -21,22 +25,28 @@ const formatDate = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'l
   <section class="section">
     <div class="container">
       {notes.length ? (
-        <div class="card-grid">
-          {notes.map((entry) => (
-            <article class="content-card">
-              <div class="content-card__meta">
-                <span><CalendarDays size={14} stroke-width={2.1} /> {formatDate.format(entry.data.publishDate)}</span>
-                {entry.data.featured && <span>精选</span>}
+        <div class="notes-list">
+          {notes.map((entry, index) => (
+            <a class="note-row" href={`/notes/${entry.id}`} aria-label={`阅读 ${entry.data.title}`}>
+              <div class="note-row__date">
+                <span>{formatDate.format(entry.data.publishDate)}</span>
+                <small>{String(index + 1).padStart(2, '0')}</small>
               </div>
-              <h2>{entry.data.title}</h2>
-              <p>{entry.data.description}</p>
-              <div class="content-card__footer">
-                <span>{entry.data.tags.join(' · ')}</span>
-                <a href={`/notes/${entry.id}`} aria-label={`阅读 ${entry.data.title}`}>
-                  <ArrowRight size={18} stroke-width={2.3} />
-                </a>
+
+              <div class="note-row__content">
+                <div class="note-row__meta">
+                  {entry.data.featured && <span class="note-row__featured">精选</span>}
+                  <span>{entry.data.tags.join(' · ') || '学习笔记'}</span>
+                </div>
+                <h2>{entry.data.title}</h2>
+                <p>{entry.data.description || '暂无摘要。'}</p>
               </div>
-            </article>
+
+              <div class="note-row__aside">
+                <span class="note-row__read">阅读笔记</span>
+                <ArrowUpRight size={20} stroke-width={2.1} />
+              </div>
+            </a>
           ))}
         </div>
       ) : (
