@@ -129,15 +129,36 @@ const notes = defineCollection({
   }),
 });
 
+const productFeature = z.object({
+  title: z.string(),
+  description: z.string(),
+});
+
+const productFaq = z.object({
+  question: z.string(),
+  answer: z.string(),
+});
+
 const products = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/products' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
+    keywords: z.array(z.string()).default([]),
     status: z.string().default('进行中'),
     category: z.string(),
+    brand: z.string().default(''),
+    productType: z.string().default(''),
+    updatedDate: z.coerce.date().optional(),
     order: z.number().default(0),
     url: z.string().optional(),
+    highlights: z.array(z.string()).default([]),
+    features: z.array(productFeature).default([]),
+    useCases: z.array(z.string()).default([]),
+    deployment: z.array(z.string()).default([]),
+    faqs: z.array(productFaq).default([]),
   }),
 });
 

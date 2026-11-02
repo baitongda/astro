@@ -24,6 +24,7 @@
 - [18. 常见问题](#18-常见问题)
 - [19. 上线检查表](#19-上线检查表)
 - [20. 后续开发顺序](#20-后续开发顺序)
+- [21. 产品与 SEO/GEO 管理](#21-产品与-seogeo-管理)
 
 ## 1. 项目定位
 
@@ -52,7 +53,8 @@
 | 图标 | `@lucide/astro` |
 | 样式 | 原生 CSS |
 | 内容后台 | 内置本地 Markdown 管理后台 |
-| 构建产物 | `dist/` 静态文件 |
+| SEO/GEO | Sitemap、robots、canonical、JSON-LD |
+| 构建产物 | dist/ 静态文件 |
 | Node.js | 建议 22 LTS 或更新版本 |
 
 ## 3. 本地开发
@@ -882,3 +884,68 @@ ls -la /srv/astro-content-site/public/uploads
 7. 上线后持续更新内容，不频繁改页面结构
 
 对于当前项目，最短可用路径是“Astro 静态站点 + 自有服务器 Nginx”。如果需要浏览器后台，再在“GitHub OAuth 方案”和“完全自托管方案”之间选择。
+
+## 21. 产品与 SEO/GEO 管理
+
+### 产品字段
+
+产品内容位于 `src/content/products`，后台会自动读取新增字段。当前产品条目支持：
+
+- 基础信息：标题、摘要、状态、分类、排序、官网链接
+- SEO：`seoTitle`、`seoDescription`、`keywords`
+- 事实信息：`brand`、`productType`、`updatedDate`
+- 内容模块：`highlights`、`features`、`useCases`、`deployment`
+- 问答：`faqs`
+- 正文：Markdown 详细介绍
+
+新增产品后，详情页会自动输出：
+
+- `SoftwareApplication` 结构化数据
+- `BreadcrumbList` 面包屑数据
+- `FAQPage` 常见问题数据
+- canonical、关键词和社交摘要
+
+### GEO 内容规范
+
+为了让搜索摘要和生成式搜索更容易准确引用：
+
+1. 第一段直接说明产品是什么、厂商是谁、解决什么问题。
+2. 使用清晰的结构化信息：产品类型、部署形态、更新时间、适用场景。
+3. 能力描述避免空泛营销词，优先写“做什么、怎么做到、适合谁”。
+4. 厂商效果数据明确标注为“官方页面称”，不要把营销表述写成独立验证结论。
+5. 增加 3 到 6 个真实选型问题。
+6. 保留官方链接和资料更新时间。
+7. 说明信息边界，例如价格、性能和商务条款以厂商最新资料为准。
+
+### 构建与提交搜索引擎
+
+生产构建必须设置正式域名：
+
+```powershell
+$env:SITE_URL = "https://你的域名"
+npm.cmd run build
+```
+
+Linux：
+
+```bash
+SITE_URL=https://你的域名 npm run build
+```
+
+构建会生成：
+
+```text
+dist/sitemap-index.xml
+dist/sitemap-0.xml
+dist/robots.txt
+```
+
+上线后：
+
+1. 在 Google Search Console 提交 `https://你的域名/sitemap-index.xml`
+2. 在 Bing Webmaster Tools 提交同一地址
+3. 百度搜索资源平台按需提交 sitemap 或主动推送
+4. 使用 Rich Results Test 检查产品与 FAQ 结构化数据
+5. 发布后持续更新 `updatedDate` 和官方来源
+
+如果正式域名尚未确定，可以先保持 `SITE_URL=http://localhost:4321`，但不要把本地 sitemap 提交给搜索引擎。

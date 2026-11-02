@@ -10,9 +10,30 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const formatDate = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+const canonical = new URL(`/notes/${entry.id}/`, Astro.site ?? Astro.url.origin).href;
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: entry.data.title,
+  description: entry.data.description,
+  datePublished: entry.data.publishDate.toISOString(),
+  dateModified: entry.data.publishDate.toISOString(),
+  keywords: entry.data.tags.join(', '),
+  mainEntityOfPage: canonical,
+  url: canonical,
+  author: { '@type': 'Organization', name: '你的品牌 AI 工作室' },
+  publisher: { '@type': 'Organization', name: '你的品牌 AI 工作室' },
+};
 ---
 
-<SiteLayout title={`${entry.data.title}｜学习笔记`} description={entry.data.description}>
+<SiteLayout
+  title={`${entry.data.title}｜学习笔记`}
+  description={entry.data.description}
+  keywords={entry.data.tags}
+  ogType="article"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+
   <article class="section">
     <div class="container article-shell">
       <div>

@@ -7,6 +7,9 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string[];
+  ogType?: 'website' | 'article' | 'product';
+  robots?: string;
 }
 
 const home = await getEntry('home', 'landing');
@@ -14,11 +17,24 @@ if (!home) {
   throw new Error('Missing src/content/home/landing.md');
 }
 
-const pageTitle = Astro.props.title ?? home.data.seo.title;
-const pageDescription = Astro.props.description ?? home.data.seo.description;
+const {
+  title,
+  description,
+  keywords,
+  ogType,
+  robots,
+} = Astro.props;
+const pageTitle = title ?? home.data.seo.title;
+const pageDescription = description ?? home.data.seo.description;
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={keywords}
+  ogType={ogType}
+  robots={robots}
+>
   <Header data={home.data} />
   <main id="main-content">
     <slot />

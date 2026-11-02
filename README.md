@@ -41,6 +41,38 @@ npm.cmd run dev
 
 也可以不使用后台，直接修改上述 Markdown 文件。保存后本地页面会自动更新。
 
+## 产品管理
+
+产品内容位于 `src/content/products`，可以在 `/admin/` 中直接维护：
+
+- 标题、摘要、产品状态和分类
+- SEO 标题、SEO 描述和关键词
+- 品牌、产品类型和资料更新日期
+- 产品要点、核心功能、适用场景和部署形态
+- FAQ
+- 官网链接和 Markdown 详细介绍
+
+保存后，产品详情页会自动输出 `SoftwareApplication`、`BreadcrumbList` 和 `FAQPage` 结构化数据。
+
+## SEO 与 GEO
+
+构建时通过 `SITE_URL` 设置正式域名：
+
+```powershell
+$env:SITE_URL = "https://你的域名"
+npm.cmd run build
+```
+
+构建会自动生成：
+
+- `sitemap-index.xml` 和分片 sitemap
+- `robots.txt`
+- canonical
+- Open Graph 与 Twitter 摘要
+- 产品结构化数据和 FAQ 结构化数据
+- 学习笔记的 `BlogPosting` 结构化数据
+
+产品页采用“先给结论，再列事实、能力、场景和 FAQ”的内容结构，便于搜索摘要和生成式搜索引擎提取可靠信息。上线后还应在 Google Search Console、Bing Webmaster Tools 等平台提交 sitemap。
 ## 发布
 
 ```powershell
@@ -53,7 +85,7 @@ npm.cmd run build
 
 ## 需要优先修改的内容
 
-- `astro.config.mjs` 里的 `site`
+- 构建生产环境时设置 `SITE_URL`
 - 首页内容里的品牌名称、邮箱、购买链接和社交账号
 - `public/favicon.svg` 替换为自己的图标
 - 上线前配置正式域名、HTTPS 和访问权限

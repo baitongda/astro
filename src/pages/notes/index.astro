@@ -6,6 +6,18 @@ import { ArrowUpRight } from '@lucide/astro';
 const notes = (await getCollection('notes')).sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
 );
+const siteOrigin = Astro.site ?? Astro.url.origin;
+const notesSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '学习笔记',
+  itemListElement: notes.map((entry, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: entry.data.title,
+    url: new URL(`/notes/${entry.id}/`, siteOrigin).href,
+  })),
+};
 const formatDate = new Intl.DateTimeFormat('zh-CN', {
   year: 'numeric',
   month: '2-digit',
@@ -13,7 +25,13 @@ const formatDate = new Intl.DateTimeFormat('zh-CN', {
 });
 ---
 
-<SiteLayout title="学习笔记｜你的 AI 办公工作室" description="记录 AI 办公、自动化流程和独立产品开发中的真实方法。">
+<SiteLayout
+  title="学习笔记｜你的 AI 办公工作室"
+  description="记录 AI 办公、自动化流程、知识管理和独立产品开发中的真实方法。"
+  keywords={['AI 办公', '知识管理', '自动化流程', '产品开发']}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(notesSchema)} />
+
   <section class="page-hero">
     <div class="container page-hero__inner">
       <div class="eyebrow">学习笔记</div>

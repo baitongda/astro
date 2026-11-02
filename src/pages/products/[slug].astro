@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import { ArrowUpRight } from '@lucide/astro';
+import { ArrowUpRight, BuildingComplex, CalendarDays, Layers, ShieldCheck } from '@lucide/astro';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -10,29 +10,212 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const data = entry.data;
+const canonical = new URL(`/products/${entry.id}/`, Astro.site ?? Astro.url.origin).href;
+const title = data.seoTitle ?? data.title;
+const description = data.seoDescription ?? data.description;
+const updatedDate = data.updatedDate ? new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(data.updatedDate) : null;
+
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: data.title,
+  description,
+  url: canonical,
+  sameAs: data.url ? [data.url] : undefined,
+  applicationCategory: 'SecurityApplication',
+  applicationSubCategory: data.productType || data.category,
+  operatingSystem: data.deployment.length ? data.deployment.join(', ') : undefined,
+  keywords: data.keywords.length ? data.keywords.join(', ') : undefined,
+  featureList: data.features.length ? data.features.map((feature) => feature.title) : undefined,
+  dateModified: data.updatedDate?.toISOString(),
+  manufacturer: data.brand
+    ? { '@type': 'Organization', name: data.brand }
+    : undefined,
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '首页', item: new URL('/', Astro.site ?? Astro.url.origin).href },
+    { '@type': 'ListItem', position: 2, name: '产品', item: new URL('/products/', Astro.site ?? Astro.url.origin).href },
+    { '@type': 'ListItem', position: 3, name: data.title, item: canonical },
+  ],
+};
+
+const faqSchema = data.faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: data.faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+      })),
+    }
+  : null;
 ---
 
-<SiteLayout title={`${entry.data.title}｜产品`} description={entry.data.description}>
-  <article class="section">
-    <div class="container article-shell">
-      <div>
-        <div class="eyebrow">{entry.data.category} · {entry.data.status}</div>
-        <h1 class="section-title">{entry.data.title}</h1>
-        <p class="section-description">{entry.data.description}</p>
-        <div class="prose" style="margin-top: 28px;"><Content /></div>
+<SiteLayout
+  title={title}
+  description={description}
+  keywords={data.keywords}
+  ogType="product"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
+  <section class="page-hero product-hero">
+    <div class="container page-hero__inner">
+      <nav class="product-breadcrumb" aria-label="面包屑">
+        <a href="/">首页</a>
+        <span>/</span>
+        <a href="/products">产品</a>
+        <span>/</span>
+        <span aria-current="page">{data.title}</span>
+      </nav>
+      <div class="eyebrow"><ShieldCheck size={15} stroke-width={2.2} />{data.category}</div>
+      <h1>{data.title}</h1>
+      <p>{data.description}</p>
+
+      {data.url && (
+        <div class="product-hero__actions">
+          <a class="button button--primary" href={data.url} target="_blank" rel="noreferrer">
+            访问官方产品页
+            <ArrowUpRight size={17} stroke-width={2.3} />
+          </a>
+          <a class="button button--secondary" href="#product-faq">查看常见问题</a>
+        </div>
+      )}
+
+      <dl class="product-facts">
+        {data.brand && (
+          <div>
+            <dt><BuildingComplex size={14} stroke-width={2.1} />厂商</dt>
+            <dd>{data.brand}</dd>
+          </div>
+        )}
+        {data.productType && (
+          <div>
+            <dt><ShieldCheck size={14} stroke-width={2.1} />产品类型</dt>
+            <dd>{data.productType}</dd>
+          </div>
+        )}
+        {data.deployment.length > 0 && (
+          <div>
+            <dt><Layers size={14} stroke-width={2.1} />部署形态</dt>
+            <dd>{data.deployment.join(' / ')}</dd>
+          </div>
+        )}
+        {updatedDate && (
+          <div>
+            <dt><CalendarDays size={14} stroke-width={2.1} />更新日期</dt>
+            <dd>{updatedDate}</dd>
+          </div>
+        )}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container product-detail-layout">
+      <div class="product-detail-main">
+        {data.highlights.length > 0 && (
+          <section class="product-section" aria-labelledby="product-highlights">
+            <h2 id="product-highlights">产品要点</h2>
+            <ul class="product-highlight-list">
+              {data.highlights.map((highlight) => <li>{highlight}</li>)}
+            </ul>
+          </section>
+        )}
+
+        {data.features.length > 0 && (
+          <section class="product-section" aria-labelledby="product-features">
+            <h2 id="product-features">核心能力</h2>
+            <div class="product-feature-grid">
+              {data.features.map((feature, index) => (
+                <article class="product-feature">
+                  <span class="product-feature__index">{String(index + 1).padStart(2, '0')}</span>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section class="product-section product-prose" aria-labelledby="product-overview">
+          <h2 id="product-overview">产品介绍</h2>
+          <div class="prose"><Content /></div>
+        </section>
+
+        {(data.useCases.length > 0 || data.deployment.length > 0) && (
+          <section class="product-section" aria-labelledby="product-scenarios">
+            <h2 id="product-scenarios">适用场景与部署</h2>
+            {data.useCases.length > 0 && (
+              <div class="product-tag-group">
+                <h3>适用场景</h3>
+                <div class="tag-row">{data.useCases.map((item) => <span class="tag">{item}</span>)}</div>
+              </div>
+            )}
+            {data.deployment.length > 0 && (
+              <div class="product-tag-group">
+                <h3>部署形态</h3>
+                <div class="tag-row">{data.deployment.map((item) => <span class="tag">{item}</span>)}</div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {data.faqs.length > 0 && (
+          <section class="product-section" id="product-faq" aria-labelledby="product-faq-title">
+            <h2 id="product-faq-title">常见问题</h2>
+            <div class="faq-list">
+              {data.faqs.map((faq, index) => (
+                <details class="faq-item" open={index === 0}>
+                  <summary>
+                    {faq.question}
+                    <span aria-hidden="true">⌄</span>
+                  </summary>
+                  <div class="faq-item__answer"><p>{faq.answer}</p></div>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
 
-      <aside class="article-aside">
-        <h2>继续了解</h2>
-        <p>你可以在后台修改产品状态、分类、排序，以及按钮要打开的链接。</p>
-        {entry.data.url && (
-          <a class="button button--primary button--block" href={entry.data.url}>
-            打开相关页面
-            <ArrowUpRight size={16} stroke-width={2.3} />
+      <aside class="product-sidebar">
+        <div class="product-sidebar__panel">
+          <h2>快速信息</h2>
+          <dl>
+            <div><dt>状态</dt><dd>{data.status}</dd></div>
+            <div><dt>分类</dt><dd>{data.category}</dd></div>
+            {data.brand && <div><dt>厂商</dt><dd>{data.brand}</dd></div>}
+            {updatedDate && <div><dt>资料更新</dt><dd>{updatedDate}</dd></div>}
+          </dl>
+
+          {data.url && (
+            <a class="button button--primary button--block" href={data.url} target="_blank" rel="noreferrer">
+              访问官方网站
+              <ArrowUpRight size={16} stroke-width={2.3} />
+            </a>
+          )}
+          <a class="button button--secondary button--block" href="/products" style="margin-top: 9px;">
+            查看全部产品
           </a>
-        )}
-        <a class="button button--secondary button--block" href="/products" style="margin-top: 10px;">返回全部产品</a>
+
+          <p class="product-sidebar__note">
+            产品信息用于整理与选型参考，功能、可用性和商务条款请以厂商官方页面为准。
+          </p>
+        </div>
       </aside>
     </div>
-  </article>
+  </section>
 </SiteLayout>
