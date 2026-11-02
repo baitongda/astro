@@ -8,7 +8,7 @@ faqs:
     question: 主要解决什么问题？
   - answer: 当前本地预览地址为 http://127.0.0.1:4325/。正式上线后需要替换为公网产品地址。
     question: 当前如何访问？
-brand: 你的品牌 AI 工作室
+brand: 亮剑AI工作室
 status: 自研产品
 highlights:
   - 多账号独立配置评论模板和统计数据。

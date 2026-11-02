@@ -7,6 +7,7 @@ interface Props {
   keywords?: string[];
   ogType?: 'website' | 'article' | 'product';
   robots?: string;
+  siteName?: string;
 }
 
 const {
@@ -15,8 +16,28 @@ const {
   keywords = [],
   ogType = 'website',
   robots = 'index,follow,max-image-preview:large',
+  siteName,
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const siteOrigin = Astro.site ?? Astro.url.origin;
+const canonical = new URL(Astro.url.pathname, siteOrigin);
+const siteRoot = new URL('/', siteOrigin).href;
+const organizationSchema = siteName
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: siteName,
+      url: siteRoot,
+      logo: new URL('/favicon.svg', siteOrigin).href,
+    }
+  : null;
+const websiteSchema = siteName
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteName,
+      url: siteRoot,
+    }
+  : null;
 ---
 
 <!doctype html>
@@ -32,6 +53,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="zh_CN" />
+    {siteName && <meta property="og:site_name" content={siteName} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -39,6 +61,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <title>{title}</title>
+    {organizationSchema && <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />}
+    {websiteSchema && <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />}
     <script is:inline>
       (() => {
         try {

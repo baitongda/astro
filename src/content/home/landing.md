@@ -1,14 +1,14 @@
 ---
 seo:
-  title: 你的 AI 办公实战课｜把重复工作交给工具
+  title: 亮剑AI工作室｜AI 办公实战课｜把重复工作交给工具
   description: 一套可以自行维护的课程与产品发布框架，覆盖首页、课程、学习笔记、产品、定价和常见问题。
 announcement:
   text: 从手边最烦的一件事开始，建立自己的 AI 工作流
   label: 查看课程
   href: "#pricing"
 brand:
-  name: 你的品牌 AI 工作室
-  shortName: 你的品牌
+  name: 亮剑AI工作室
+  shortName: 亮剑AI
   slogan: 真实项目，长期记录
 navigation:
   - label: 学习笔记
@@ -256,7 +256,7 @@ footer:
     - label: English
       href: /en
       active: false
-  copyright: © 2026 你的品牌。保留所有权利。
+  copyright: © 2026 亮剑AI工作室。保留所有权利。
 ---
 
 首页内容都在上方字段中维护。Markdown 正文留空，方便可视化后台统一编辑。
