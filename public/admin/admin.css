@@ -989,3 +989,156 @@ body.has-modal {
     width: 100%;
   }
 }
+/* Enhanced Markdown editor */
+.raw-body .EasyMDEContainer {
+  width: 100%;
+}
+
+.raw-body .editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  border-color: var(--line-strong);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--surface-soft);
+  padding: 7px 8px;
+  opacity: 1;
+}
+
+.raw-body .editor-toolbar::before,
+.raw-body .editor-toolbar::after {
+  display: none;
+}
+
+.raw-body .editor-toolbar button {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text-soft);
+  padding: 0;
+}
+
+.raw-body .editor-toolbar button:hover,
+.raw-body .editor-toolbar button.active {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--primary);
+}
+
+.raw-body .editor-toolbar i {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.raw-body .editor-toolbar i.separator {
+  width: 1px;
+  height: 22px;
+  margin: 5px 5px;
+  border-left-color: var(--line);
+}
+
+.raw-body .CodeMirror {
+  min-height: 380px;
+  border: 1px solid var(--line-strong);
+  border-top: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Microsoft YaHei', monospace;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.raw-body .CodeMirror-focused {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.08);
+}
+
+.raw-body .CodeMirror-gutters {
+  border-right-color: var(--line);
+  background: var(--surface-soft);
+}
+
+.raw-body .CodeMirror-linenumber {
+  color: var(--muted);
+}
+
+.raw-body .CodeMirror-cursor {
+  border-left-color: var(--primary);
+}
+
+.raw-body .editor-statusbar {
+  color: var(--muted);
+  padding: 7px 2px 0;
+  font-size: 10px;
+}
+
+.raw-body .editor-preview,
+.raw-body .editor-preview-side {
+  border-color: var(--line-strong);
+  background: var(--surface);
+  color: var(--text-soft);
+  padding: 20px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.raw-body .editor-preview h1,
+.raw-body .editor-preview h2,
+.raw-body .editor-preview h3,
+.raw-body .editor-preview-side h1,
+.raw-body .editor-preview-side h2,
+.raw-body .editor-preview-side h3 {
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.raw-body .editor-preview a,
+.raw-body .editor-preview-side a {
+  color: var(--primary);
+}
+
+.raw-body .editor-preview pre,
+.raw-body .editor-preview-side pre {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-soft);
+  padding: 12px;
+}
+
+.raw-body .editor-preview code,
+.raw-body .editor-preview-side code {
+  color: var(--text);
+}
+
+.raw-body .EasyMDEContainer.sided--no-fullscreen .CodeMirror {
+  border-radius: 0 0 0 var(--radius);
+}
+
+.raw-body .EasyMDEContainer.sided--no-fullscreen .editor-preview-side {
+  border-radius: 0 0 var(--radius) 0;
+}
+
+@media (max-width: 640px) {
+  .raw-body .editor-toolbar {
+    gap: 1px;
+    padding: 6px;
+  }
+
+  .raw-body .editor-toolbar button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .raw-body .CodeMirror {
+    min-height: 320px;
+    font-size: 12px;
+  }
+}
